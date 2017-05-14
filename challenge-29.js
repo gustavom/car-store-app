@@ -54,15 +54,15 @@
             },
 
             createNewCar: function createNewCar() {
-                var $fragment = document.createDocumentFragment();
-                var $tr = document.createElement('tr');
-                var $tdImage = document.createElement('td');
-                var $imagem = document.createElement('img');
-                var $tdCor = document.createElement('td');
-                var $tdAno = document.createElement('td');
-                var $tdBrandModel = document.createElement('td');
-                var $tdPlate = document.createElement('td');
-                var imagemUrl = $('[data-js="image"]').get().value;
+                var $fragment = document.createDocumentFragment(),
+                    $tr = document.createElement('tr'),
+                    $tdImage = document.createElement('td'),
+                    $imagem = document.createElement('img'),
+                    $tdCor = document.createElement('td'),
+                    $tdAno = document.createElement('td'),
+                    $tdBrandModel = document.createElement('td'),
+                    $tdPlate = document.createElement('td'),
+                    imagemUrl = $('[data-js="image"]').get().value;
                 
                 $tdBrandModel.textContent = $('[data-js="brand-model"]').get().value;
                 $tdCor.textContent = $('[data-js="color"]').get().value;
