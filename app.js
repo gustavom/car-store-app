@@ -1,4 +1,4 @@
-(function ($) {
+(function($) {
     'use strict';
 
     /*
@@ -38,7 +38,7 @@
     var app = (function appControler() {
         return {
 
-            init: function () {
+            init: function() {
                 this.companyInfo();
                 this.initEvents();
             },
@@ -62,22 +62,35 @@
                     $tdAno = document.createElement('td'),
                     $tdBrandModel = document.createElement('td'),
                     $tdPlate = document.createElement('td'),
+                    $tdRemove = document.createElement('td'),
+                    $btnRemove = document.createElement('button'),
                     imagemUrl = $('[data-js="image"]').get().value;
-                
+
                 $tdBrandModel.textContent = $('[data-js="brand-model"]').get().value;
                 $tdCor.textContent = $('[data-js="color"]').get().value;
                 $tdAno.textContent = $('[data-js="year"]').get().value;
                 $tdPlate.textContent = $('[data-js="plate"]').get().value;
-                
-                $imagem.setAttribute('src',imagemUrl)
+                $btnRemove.textContent = 'Remover';
+                $btnRemove.setAttribute('data-js', 'btn-remove');
+
+                $imagem.setAttribute('src', imagemUrl)
                 $tdImage.appendChild($imagem);
                 $tr.appendChild($tdImage);
-                $tr.appendChild($tdCor);
                 $tr.appendChild($tdBrandModel);
                 $tr.appendChild($tdAno);
                 $tr.appendChild($tdPlate);
+                $tr.appendChild($tdCor);
+                $tdRemove.appendChild($btnRemove);
+                $tr.appendChild($tdRemove);
+
+                $btnRemove.addEventListener('click', this.removeRegister, false);
+                //$('[data-js="btn-remove"]').on('click', this.removeRegister);
 
                 return $fragment.appendChild($tr);
+            },
+
+            removeRegister: function removeRegister(e) {
+                this.parentNode.parentNode.remove();
             },
 
             companyInfo: function companyInfo() {

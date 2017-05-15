@@ -142,8 +142,7 @@ main .inner {
     border-right: 0;
 }
 
-
-.tableCars table td img{
+.tableCars table td img {
     max-width: 100%;
     height: auto;
 }
@@ -159,4 +158,8 @@ main .inner {
 .tableCars table tr:last-child td:last-child {
     border-radius: 0 0 3px 0;
     border-right: solid 1px #999999;
+}
+
+.tableCars table tr:nth-child(even) {
+    background-color: #efefef;
 }
