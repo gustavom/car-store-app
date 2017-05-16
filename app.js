@@ -34,6 +34,21 @@
 
     E aqui nesse arquivo, faça a lógica para cadastrar os carros, em um módulo
     que será nomeado de "app".
+
+    Tarefa:
+
+    - Para listar os carros cadastrados ao carregar o seu projeto, faça um request GET no endereço
+`http://localhost:3000/car`
+- Para cadastrar um novo carro, faça um POST no endereço `http://localhost:3000/car`, enviando
+os seguintes campos:
+  - `image` com a URL da imagem do carro;
+  - `brandModel`, com a marca e modelo do carro;
+  - `year`, com o ano do carro;
+  - `plate`, com a placa do carro;
+  - `color`, com a cor do carro.
+
+Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o novo carro cadastrado.
+
     */
     var app = (function appControler() {
         return {
@@ -41,6 +56,7 @@
             init: function() {
                 this.companyInfo();
                 this.initEvents();
+                this.getCarsList();
             },
 
             initEvents: function initEvents() {
@@ -51,6 +67,7 @@
                 e.preventDefault();
                 var $tableCar = $('[data-js="table-car"]').get();
                 $tableCar.appendChild(app.createNewCar());
+                app.registesCarList()
             },
 
             createNewCar: function createNewCar() {
@@ -110,6 +127,36 @@
                 $companyName.get(0).textContent = data.name;
                 $companyName.get(1).textContent = data.name;
                 $companyPhone.get().textContent = data.phone;
+            },
+
+            getCarsList: function getCarsList(){
+              var ajax = new XMLHttpRequest;
+              ajax.open('GET','http://localhost:3000/car', true);  
+              ajax.send();
+              ajax.addEventListener('readystatechange', function(){
+                  if (!app.isReady.call(this))
+                    return;
+
+                var data = JSON.parse(this.responseText);
+                console.log(data);
+                
+              }, false);
+            },
+
+            registesCarList: function registesCarList(){
+                var ajax = new XMLHttpRequest;
+                ajax.open('POST','http://localhost:3000/car', true);
+                ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                var car = {
+                    image : $('[data-js="image"]').get().value, 
+                    brandModel : $('[data-js="brand-model"]').get().value,
+                    year : $('[data-js="year"]').get().value,
+                    plate : $('[data-js="plate"]').get().value,
+                    color : $('[data-js="color"]').get().value
+                };
+
+                var param = 'image=' + car.image + '&brandModel=' + car.brandModel + '&year=' + car.year + '&plate=' + car.year + '&color=' + car.color;
+                ajax.send(param);
             },
 
             isReady: function isReady() {
