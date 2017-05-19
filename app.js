@@ -145,7 +145,7 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
 
             registesCarList: function registesCarList(){
                 var ajax = new XMLHttpRequest;
-                ajax.open('POST','http://localhost:3000/car', true);
+                ajax.open('POST','http://localhost:3000/car');
                 ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 var car = {
                     image : $('[data-js="image"]').get().value, 
