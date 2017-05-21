@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
     'use strict';
 
     /*
@@ -36,9 +36,11 @@
     que será nomeado de "app".
     */
     var app = (function appControler() {
+        var $carRegisterNumber = 0;
         return {
 
-            init: function() {
+
+            init: function () {
                 this.companyInfo();
                 this.initEvents();
             },
@@ -75,21 +77,26 @@
 
                 $imagem.setAttribute('src', imagemUrl)
                 $tdImage.appendChild($imagem);
+                $carRegisterNumber++;
+                $tr.setAttribute('id', 'register-number-' + $carRegisterNumber);
                 $tr.appendChild($tdImage);
                 $tr.appendChild($tdBrandModel);
                 $tr.appendChild($tdAno);
                 $tr.appendChild($tdPlate);
                 $tr.appendChild($tdCor);
+                $btnRemove.setAttribute('data-js-register-relation', 'register-number-' + $carRegisterNumber);
                 $tdRemove.appendChild($btnRemove);
                 $tr.appendChild($tdRemove);
 
                 $btnRemove.addEventListener('click', this.removeRegister, false);
-                //$('[data-js="btn-remove"]').on('click', this.removeRegister);
+                //console.log($('[data-js="btn-remove"]'));
+                //$('[data-js="btn-remove"]').on('click', appControler().removeRegister);
 
                 return $fragment.appendChild($tr);
             },
 
-            removeRegister: function removeRegister(e) {
+            removeRegister: function removeRegister(event) {
+                event.preventDefault();
                 this.parentNode.parentNode.remove();
             },
 
