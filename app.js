@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
     'use strict';
 
     /*
@@ -51,9 +51,18 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
 
     */
     var app = (function appControler() {
+
+        var $carRegisterNumber = 0,
+            $formImagem = $('[data-js="image"]').get(),
+            $formBrandModel = $('[data-js="brand-model"]').get(),
+            $formCor = $('[data-js="color"]').get(),
+            $formAno = $('[data-js="year"]').get(),
+            $formPlate = $('[data-js="plate"]').get(),
+            $tableCar = $('[data-js="table-car"]').get();
+
         return {
 
-            init: function() {
+            init: function () {
                 this.companyInfo();
                 this.initEvents();
                 this.getCarsList();
@@ -65,12 +74,28 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
 
             handleSubmit: function handleSubmit(e) {
                 e.preventDefault();
-                var $tableCar = $('[data-js="table-car"]').get();
-                $tableCar.appendChild(app.createNewCar());
-                app.registesCarList()
+                //var $tableCar = $('[data-js="table-car"]').get();
+                //$tableCar.appendChild(app.createNewCar());
+                app.registesCarList();
+                app.clearForm();
+                app.clearTableBody();
+                app.getCarsList();
             },
 
-            createNewCar: function createNewCar() {
+            clearForm: function clearForm() {
+                $formImagem.value = '';
+                $formBrandModel.value = '';
+                $formAno.value = '';
+                $formPlate.value = '';
+                $formCor.value = '';
+                $formImagem.focus();
+            },
+            
+            clearTableBody: function clearTableBody(){
+                $tableCar.innerHTML = '';
+            },
+
+            createNewCar: function createNewCar(array, index) {
                 var $fragment = document.createDocumentFragment(),
                     $tr = document.createElement('tr'),
                     $tdImage = document.createElement('td'),
@@ -81,12 +106,12 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
                     $tdPlate = document.createElement('td'),
                     $tdRemove = document.createElement('td'),
                     $btnRemove = document.createElement('button'),
-                    imagemUrl = $('[data-js="image"]').get().value;
+                    imagemUrl = array[index].image;
 
-                $tdBrandModel.textContent = $('[data-js="brand-model"]').get().value;
-                $tdCor.textContent = $('[data-js="color"]').get().value;
-                $tdAno.textContent = $('[data-js="year"]').get().value;
-                $tdPlate.textContent = $('[data-js="plate"]').get().value;
+                $tdBrandModel.textContent = array[index].brandModel;
+                $tdCor.textContent = array[index].color;
+                $tdAno.textContent = array[index].year;
+                $tdPlate.textContent = array[index].plate;
                 $btnRemove.textContent = 'Remover';
                 $btnRemove.setAttribute('data-js', 'btn-remove');
 
@@ -101,7 +126,6 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
                 $tr.appendChild($tdRemove);
 
                 $btnRemove.addEventListener('click', this.removeRegister, false);
-                //$('[data-js="btn-remove"]').on('click', this.removeRegister);
 
                 return $fragment.appendChild($tr);
             },
@@ -129,30 +153,34 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
                 $companyPhone.get().textContent = data.phone;
             },
 
-            getCarsList: function getCarsList(){
-              var ajax = new XMLHttpRequest;
-              ajax.open('GET','http://localhost:3000/car', true);  
-              ajax.send();
-              ajax.addEventListener('readystatechange', function(){
-                  if (!app.isReady.call(this))
-                    return;
+            getCarsList: function getCarsList() {
+                var k = 0;
 
-                var data = JSON.parse(this.responseText);
-                console.log(data);
-                
-              }, false);
+                var ajax = new XMLHttpRequest;
+                ajax.open('GET', 'http://localhost:3000/car', true);
+                ajax.send();
+                ajax.addEventListener('readystatechange', function () {
+                    if (!app.isReady.call(this))
+                        return;
+
+                    var data = JSON.parse(this.responseText);
+                    for (var k in data) {
+                        $tableCar.appendChild(app.createNewCar(data, k));
+                    };
+
+                }, false);
             },
 
-            registesCarList: function registesCarList(){
+            registesCarList: function registesCarList() {
                 var ajax = new XMLHttpRequest;
-                ajax.open('POST','http://localhost:3000/car');
+                ajax.open('POST', 'http://localhost:3000/car');
                 ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 var car = {
-                    image : $('[data-js="image"]').get().value, 
-                    brandModel : $('[data-js="brand-model"]').get().value,
-                    year : $('[data-js="year"]').get().value,
-                    plate : $('[data-js="plate"]').get().value,
-                    color : $('[data-js="color"]').get().value
+                    image: $formImagem.value,
+                    brandModel: $formBrandModel.value,
+                    year: $formAno.value,
+                    plate: $formPlate.value,
+                    color: $formCor.value
                 };
 
                 var param = 'image=' + car.image + '&brandModel=' + car.brandModel + '&year=' + car.year + '&plate=' + car.year + '&color=' + car.color;
