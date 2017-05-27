@@ -124,6 +124,7 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
                 $tr.appendChild($tdCor);
                 $tdRemove.appendChild($btnRemove);
                 $tr.appendChild($tdRemove);
+                $tr.setAttribute('id', Date.now());
 
                 $btnRemove.addEventListener('click', this.removeRegister, false);
 
@@ -131,7 +132,20 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
             },
 
             removeRegister: function removeRegister(e) {
-                this.parentNode.parentNode.remove();
+                var $thisBtn = this;
+                var $tdCor = this.parentNode.previousSibling,
+                    $tdPlaca = $tdCor.previousSibling;
+                
+                var ajax = new XMLHttpRequest;
+                ajax.open('DELETE', 'http://localhost:3000/car');
+                ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                ajax.send('plate=' + $tdPlaca.textContent);
+                var $hasPlate ;
+                ajax.addEventListener('readystatechange', function(){
+                    if (!app.isReady.call(this))
+                        return;                    
+                    $thisBtn.parentNode.parentNode.remove();
+                },false);  
             },
 
             companyInfo: function companyInfo() {
@@ -183,7 +197,7 @@ Após enviar o POST, faça um GET no `server` e atualize a tabela para mostrar o
                     color: $formCor.value
                 };
 
-                var param = 'image=' + car.image + '&brandModel=' + car.brandModel + '&year=' + car.year + '&plate=' + car.year + '&color=' + car.color;
+                var param = 'image=' + car.image + '&brandModel=' + car.brandModel + '&year=' + car.year + '&plate=' + car.plate + '&color=' + car.color;
                 ajax.send(param);
             },
 
